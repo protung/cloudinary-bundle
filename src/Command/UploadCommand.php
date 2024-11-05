@@ -6,6 +6,7 @@ namespace Speicher210\CloudinaryBundle\Command;
 
 use Cloudinary\Api\ApiResponse;
 use Psl\Filesystem;
+use Psl\Type;
 use Speicher210\CloudinaryBundle\Cloudinary\Uploader;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -55,7 +56,7 @@ final class UploadCommand extends Command
         $symfonyStyle = new SymfonyStyle($input, $output);
 
         $files  = Finder::create()->files()->in($input->getArgument('directory'));
-        $prefix = $input->getOption('prefix');
+        $prefix = Type\string()->coerce($input->getOption('prefix'));
         if ($input->getOption('filter') !== null) {
             $files->name($input->getOption('filter'));
         }
