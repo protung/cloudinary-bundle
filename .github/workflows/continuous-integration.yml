@@ -16,7 +16,7 @@ jobs:
     if: github.event.pull_request.draft == false
     runs-on: ubuntu-latest
     env:
-      SYMFONY_REQUIRE: ${{matrix.symfony-require}}
+      SYMFONY_REQUIRE: ${{matrix.symfony_version}}
       SYMFONY_DEPRECATIONS_HELPER: "baselineFile=./tests/allowed-deprecations.json"
     strategy:
       fail-fast: false
@@ -28,34 +28,34 @@ jobs:
           - 8.4
         dependencies:
           - "highest"
-        symfony-require:
+        symfony_version:
           - ""
         include:
           # Test against latest Symfony 5.4
-          - symfony-require: "5.4.*"
+          - symfony_version: "5.4.*"
             php-version: "8.1"
             dependencies: "highest"
-          - symfony-require: "5.4.*"
+          - symfony_version: "5.4.*"
             php-version: "8.2"
             dependencies: "highest"
-          - symfony-require: "5.4.*"
+          - symfony_version: "5.4.*"
             php-version: "8.3"
             dependencies: "highest"
-          - symfony-require: "5.4.*"
+          - symfony_version: "5.4.*"
             php-version: "8.4"
             dependencies: "highest"
 
           # Test against latest Symfony 6.4
-          - symfony-require: "6.4.*"
+          - symfony_version: "6.4.*"
             php-version: "8.1"
             dependencies: "highest"
-          - symfony-require: "6.4.*"
+          - symfony_version: "6.4.*"
             php-version: "8.2"
             dependencies: "highest"
-          - symfony-require: "6.4.*"
+          - symfony_version: "6.4.*"
             php-version: "8.3"
             dependencies: "highest"
-          - symfony-require: "6.4.*"
+          - symfony_version: "6.4.*"
             php-version: "8.4"
             dependencies: "highest"
 
@@ -80,8 +80,18 @@ jobs:
           coverage: pcov
           ini-values: "zend.assertions=1"
 
+      - name: "symfony/flex is required to install the correct symfony version"
+        if: ${{ matrix.symfony_version }}
+        run: |
+          composer global config --no-plugins allow-plugins.symfony/flex true
+          composer global require symfony/flex
+
+      - name: "Configure Symfony version for symfony/flex"
+        if: ${{ matrix.symfony_version }}
+        run: composer config extra.symfony.require "${{ matrix.symfony_version }}.*"
+
       - name: "Install dependencies with Composer"
-        uses: "ramsey/composer-install@v2"
+        uses: "ramsey/composer-install@v3"
         with:
           dependency-versions: "${{ matrix.dependencies }}"
 

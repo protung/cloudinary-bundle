@@ -39,7 +39,7 @@
     "psalm/plugin-phpunit": "^0.19.2",
     "roave/security-advisories": "dev-latest",
     "twig/twig": "^2.0 || ^3.19",
-    "vimeo/psalm": "^6.4.0"
+    "vimeo/psalm": "^6.0.0"
   },
   "suggest": {
     "twig/twig": "Allow to use the cloudinary_url function/filter"
