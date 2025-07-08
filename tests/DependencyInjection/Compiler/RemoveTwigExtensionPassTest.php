@@ -4,17 +4,19 @@ declare(strict_types=1);
 
 namespace Speicher210\CloudinaryBundle\Tests\DependencyInjection\Compiler;
 
+use Override;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Speicher210\CloudinaryBundle\DependencyInjection\Compiler\RemoveTwigExtensionPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
-class RemoveTwigExtensionPassTest extends TestCase
+final class RemoveTwigExtensionPassTest extends TestCase
 {
     private ContainerBuilder&MockObject $container;
 
     private RemoveTwigExtensionPass $compilerPass;
 
+    #[Override]
     protected function setUp(): void
     {
         $this->container = $this->createMock(ContainerBuilder::class);
@@ -25,13 +27,13 @@ class RemoveTwigExtensionPassTest extends TestCase
     public function testProcessWithTwig(): void
     {
         $this->container
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('hasDefinition')
             ->with('twig')
             ->willReturn(true);
 
         $this->container
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('removeDefinition')
             ->with('twig.extension.cloudinary');
 
@@ -41,13 +43,13 @@ class RemoveTwigExtensionPassTest extends TestCase
     public function testProcessWithoutTwig(): void
     {
         $this->container
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('hasDefinition')
             ->with('twig')
             ->willReturn(false);
 
         $this->container
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('removeDefinition')
             ->with('twig.extension.cloudinary');
 

@@ -6,7 +6,7 @@ namespace Speicher210\CloudinaryBundle\Factory;
 
 use InvalidArgumentException;
 
-class InvalidCloudinaryUrlException extends InvalidArgumentException
+final class InvalidCloudinaryUrlException extends InvalidArgumentException
 {
     public function __construct()
     {

@@ -1,8 +1,8 @@
 # Speicher210 CloudinaryBundle
 
-[![Latest Version](https://img.shields.io/github/tag/Speicher210/CloudinaryBundle.svg?style=flat-square)](https://github.com/Speicher210/CloudinaryBundle/releases)
+[![Latest Version](https://img.shields.io/github/tag/protung/cloudinary-bundle.svg?style=flat-square)](https://github.com/Speicher210/CloudinaryBundle/releases)
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE.md)
-![GitHub branch checks state](https://img.shields.io/github/checks-status/Speicher210/CloudinaryBundle/master?style=flat-square)
+![GitHub branch checks state](https://img.shields.io/github/checks-status/protung/cloudinary-bundle/1.x?style=flat-square)
 
 ## Install
 
@@ -25,25 +25,9 @@ return [
 ];
 ```
 
-or
-
-``` php
-// app/AppKernel.php
-// ...
-public function registerBundles()
-{
-    return array(
-        // ...
-        new Speicher210\CloudinaryBundle\Speicher210CloudinaryBundle(),
-        // ...
-    );
-}
-// ...
-```
-
 ## Usage
 
-Configure the connection to cloudinary in your `config.yml` :
+Configure the connection to cloudinary in your `config.yaml` :
 
 ``` yaml
 speicher210_cloudinary:
@@ -54,8 +38,7 @@ speicher210_cloudinary:
     access_identifier:
         api_key: my-key
         api_secret: my-secret
-    options:
-        secure: true
+    secure: true
 ```
 
 The following services will be available:

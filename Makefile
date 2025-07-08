@@ -19,7 +19,7 @@ coding-standard-fix:                                                            
 
 .PHONY: static-analysis
 static-analysis:                                                                ## Run static analysis checks
-	./vendor/bin/phpstan --configuration=config/phpstan.neon
+	./vendor/bin/phpstan --configuration=config/phpstan.neon --memory-limit=256M
 	./vendor/bin/psalm --config config/psalm.xml --no-cache
 
 .PHONY: static-analysis-update

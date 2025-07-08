@@ -9,6 +9,7 @@ use Cloudinary\Tag\ImageTag;
 use Cloudinary\Tag\PictureTag;
 use Cloudinary\Tag\VideoTag;
 use Cloudinary\Transformation\ImageTransformation;
+use Override;
 use Speicher210\CloudinaryBundle\Cloudinary\Cloudinary;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
@@ -34,6 +35,7 @@ final class CloudinaryExtension extends AbstractExtension
     /**
      * {@inheritDoc}
      */
+    #[Override]
     public function getFunctions(): array
     {
         return [
@@ -47,6 +49,7 @@ final class CloudinaryExtension extends AbstractExtension
     /**
      * {@inheritDoc}
      */
+    #[Override]
     public function getFilters(): array
     {
         return [

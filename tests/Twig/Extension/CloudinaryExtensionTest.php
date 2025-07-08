@@ -4,19 +4,20 @@ declare(strict_types=1);
 
 namespace Speicher210\CloudinaryBundle\Tests\Twig\Extension;
 
+use Override;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Speicher210\CloudinaryBundle\Cloudinary\Cloudinary;
 use Speicher210\CloudinaryBundle\Twig\Extension\CloudinaryExtension;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
 
-/**
- * @covers \Speicher210\CloudinaryBundle\Twig\Extension\CloudinaryExtension
- */
+#[CoversClass(CloudinaryExtension::class)]
 final class CloudinaryExtensionTest extends TestCase
 {
     private Environment $twig;
 
+    #[Override]
     protected function setUp(): void
     {
         $cloudinary = new Cloudinary(['cloud_name' => 'test', 'analytics' => false]);

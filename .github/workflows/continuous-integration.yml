@@ -22,8 +22,6 @@ jobs:
       fail-fast: false
       matrix:
         php-version:
-          - 8.1
-          - 8.2
           - 8.3
           - 8.4
         dependencies:
@@ -31,27 +29,7 @@ jobs:
         symfony_version:
           - ""
         include:
-          # Test against latest Symfony 5.4
-          - symfony_version: "5.4.*"
-            php-version: "8.1"
-            dependencies: "highest"
-          - symfony_version: "5.4.*"
-            php-version: "8.2"
-            dependencies: "highest"
-          - symfony_version: "5.4.*"
-            php-version: "8.3"
-            dependencies: "highest"
-          - symfony_version: "5.4.*"
-            php-version: "8.4"
-            dependencies: "highest"
-
           # Test against latest Symfony 6.4
-          - symfony_version: "6.4.*"
-            php-version: "8.1"
-            dependencies: "highest"
-          - symfony_version: "6.4.*"
-            php-version: "8.2"
-            dependencies: "highest"
           - symfony_version: "6.4.*"
             php-version: "8.3"
             dependencies: "highest"
@@ -60,10 +38,6 @@ jobs:
             dependencies: "highest"
 
           # Test against the highest dependencies
-          - php-version: "8.1"
-            dependencies: "highest"
-          - php-version: "8.2"
-            dependencies: "highest"
           - php-version: "8.3"
             dependencies: "highest"
           - php-version: "8.4"

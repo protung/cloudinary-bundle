@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Speicher210\CloudinaryBundle\Command;
 
 use Cloudinary\Api\ApiResponse;
+use Override;
 use Psl\Filesystem;
 use Psl\Type;
 use Speicher210\CloudinaryBundle\Cloudinary\Uploader;
@@ -29,6 +30,7 @@ final class UploadCommand extends Command
         parent::__construct();
     }
 
+    #[Override]
     protected function configure(): void
     {
         $this
@@ -51,6 +53,7 @@ final class UploadCommand extends Command
             );
     }
 
+    #[Override]
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $symfonyStyle = new SymfonyStyle($input, $output);
