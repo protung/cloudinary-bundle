@@ -1,5 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<files psalm-version="6.4.0@04f312ac6ea48ba1c3e5db4d815bf6d74641c0ee">
+<files psalm-version="6.12.1@e71404b0465be25cf7f8a631b298c01c5ddd864f">
+  <file src="../src/Cloudinary/Admin.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[Admin]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="../src/Cloudinary/Cloudinary.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[Cloudinary]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="../src/Cloudinary/Uploader.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[Uploader]]></code>
+    </ClassMustBeFinal>
+  </file>
   <file src="../src/Command/InfoCommand.php">
     <InvalidArrayOffset>
       <code><![CDATA[$pre[$exp - 1]]]></code>

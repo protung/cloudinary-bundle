@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Speicher210\CloudinaryBundle\Command;
 
 use Cloudinary\Api\ApiResponse;
+use Override;
 use Speicher210\CloudinaryBundle\Cloudinary\Admin;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\TableCell;
@@ -29,6 +30,7 @@ final class InfoCommand extends Command
         parent::__construct();
     }
 
+    #[Override]
     protected function configure(): void
     {
         $this
@@ -37,6 +39,7 @@ final class InfoCommand extends Command
             ->addArgument('public_id', InputArgument::REQUIRED, 'The public ID of the resource.');
     }
 
+    #[Override]
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $symfonyStyle = new SymfonyStyle($input, $output);

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Speicher210\CloudinaryBundle\DependencyInjection;
 
+use Override;
 use Speicher210\CloudinaryBundle\Factory\CloudinaryFactory;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -15,6 +16,7 @@ final class Speicher210CloudinaryExtension extends ConfigurableExtension
     /**
      * @param array<mixed> $mergedConfig
      */
+    #[Override]
     protected function loadInternal(array $mergedConfig, ContainerBuilder $container): void
     {
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));

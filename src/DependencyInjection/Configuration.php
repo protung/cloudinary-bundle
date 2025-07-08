@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace Speicher210\CloudinaryBundle\DependencyInjection;
 
+use Override;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
 final class Configuration implements ConfigurationInterface
 {
+    #[Override]
     public function getConfigTreeBuilder(): TreeBuilder
     {
         $treeBuilder = new TreeBuilder('speicher210_cloudinary');

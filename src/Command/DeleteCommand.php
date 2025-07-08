@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Speicher210\CloudinaryBundle\Command;
 
 use Cloudinary\Api\ApiResponse;
+use Override;
 use Psl\Str;
 use Speicher210\CloudinaryBundle\Cloudinary\Admin;
 use Symfony\Component\Console\Command\Command;
@@ -24,6 +25,7 @@ final class DeleteCommand extends Command
         parent::__construct();
     }
 
+    #[Override]
     protected function configure(): void
     {
         $this
@@ -43,6 +45,7 @@ final class DeleteCommand extends Command
             );
     }
 
+    #[Override]
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $symfonyStyle = new SymfonyStyle($input, $output);

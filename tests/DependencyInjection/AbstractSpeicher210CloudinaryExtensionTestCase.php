@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Speicher210\CloudinaryBundle\Tests\DependencyInjection;
 
 use Cloudinary\Configuration\Configuration;
+use Override;
 use PHPUnit\Framework\TestCase;
 use Speicher210\CloudinaryBundle\Cloudinary\Admin;
 use Speicher210\CloudinaryBundle\Cloudinary\Cloudinary;
@@ -17,6 +18,7 @@ abstract class AbstractSpeicher210CloudinaryExtensionTestCase extends TestCase
 {
     private ContainerBuilder $container;
 
+    #[Override]
     protected function setUp(): void
     {
         $this->container = new ContainerBuilder();
