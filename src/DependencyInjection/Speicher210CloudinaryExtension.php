@@ -19,8 +19,8 @@ final class Speicher210CloudinaryExtension extends ConfigurableExtension
     #[Override]
     protected function loadInternal(array $mergedConfig, ContainerBuilder $container): void
     {
-        $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
-        $loader->load('services.xml');
+        $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
+        $loader->load('services.yaml');
 
         $container
             ->getDefinition(CloudinaryFactory::class)
