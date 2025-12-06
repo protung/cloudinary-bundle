@@ -10,9 +10,9 @@ use Speicher210\CloudinaryBundle\Cloudinary\Cloudinary;
 use function array_key_exists;
 use function parse_url;
 
-final class CloudinaryFactory
+final readonly class CloudinaryFactory
 {
-    private readonly Configuration $configuration;
+    private Configuration $configuration;
 
     /**
      * @param array{url?: string, cloud_name?: string, access_identifier?: array{api_key: string, api_secret: string}, secure?: bool} $config

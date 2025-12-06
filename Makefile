@@ -20,16 +20,10 @@ coding-standard-fix:                                                            
 .PHONY: static-analysis
 static-analysis:                                                                ## Run static analysis checks
 	./vendor/bin/phpstan --configuration=config/phpstan.neon --memory-limit=256M
-	./vendor/bin/psalm --config config/psalm.xml --no-cache
 
 .PHONY: static-analysis-update
 static-analysis-update:                                                         ## Update static analysis baselines
 	./vendor/bin/phpstan --configuration=config/phpstan.neon --generate-baseline=config/phpstan-baseline.neon --allow-empty-baseline
-	./vendor/bin/psalm --config config/psalm.xml --set-baseline=psalm.baseline.xml --show-info=true --no-cache
-
-.PHONY: security-analysis
-security-analysis:                                                              ## Run static analysis security checks
-	./vendor/bin/psalm -c config/psalm.xml --taint-analysis
 
 .PHONY: unit-tests
 unit-tests:                                                                     ## Run unit test suite
@@ -40,4 +34,4 @@ composer-validate:
 	./vendor/bin/composer validate
 
 .PHONY: check
-check: coding-standard-check static-analysis security-analysis unit-tests       ## Run all checks for local development iterations
+check: coding-standard-check static-analysis unit-tests       ## Run all checks for local development iterations

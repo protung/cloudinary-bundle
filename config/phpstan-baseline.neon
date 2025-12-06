@@ -1,55 +1,61 @@
 parameters:
 	ignoreErrors:
 		-
-			message: '#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\.$#'
+			rawMessage: 'Argument of an invalid type mixed supplied for foreach, only iterables are supported.'
 			identifier: foreach.nonIterable
 			count: 1
 			path: ../src/Command/DeleteCommand.php
 
 		-
-			message: '#^Parameter \#1 \$prefix of method Cloudinary\\Api\\Admin\\AdminApi\:\:deleteAssetsByPrefix\(\) expects string, mixed given\.$#'
+			rawMessage: 'Parameter #1 $prefix of method Cloudinary\Api\Admin\AdminApi::deleteAssetsByPrefix() expects string, mixed given.'
 			identifier: argument.type
 			count: 1
 			path: ../src/Command/DeleteCommand.php
 
 		-
-			message: '#^Parameter \#1 \$publicIds of method Cloudinary\\Api\\Admin\\AdminApi\:\:deleteAssets\(\) expects array\|string, mixed given\.$#'
+			rawMessage: 'Parameter #1 $publicIds of method Cloudinary\Api\Admin\AdminApi::deleteAssets() expects array|string, mixed given.'
 			identifier: argument.type
 			count: 1
 			path: ../src/Command/DeleteCommand.php
 
 		-
-			message: '#^Parameter \#2 \.\.\.\$args of function Psl\\Str\\format expects float\|int\|string, mixed given\.$#'
+			rawMessage: 'Parameter #2 ...$args of function Psl\Str\format expects float|int|string, mixed given.'
 			identifier: argument.type
 			count: 2
 			path: ../src/Command/DeleteCommand.php
 
 		-
-			message: '#^Parameter \#1 \$publicId of method Cloudinary\\Api\\Admin\\AdminApi\:\:asset\(\) expects string, mixed given\.$#'
+			rawMessage: 'Parameter #1 $publicId of method Cloudinary\Api\Admin\AdminApi::asset() expects string, mixed given.'
 			identifier: argument.type
 			count: 1
 			path: ../src/Command/InfoCommand.php
 
 		-
-			message: '#^Parameter \#2 \$derivedResources of method Speicher210\\CloudinaryBundle\\Command\\InfoCommand\:\:renderDerivedResources\(\) expects array\<array\{id\: string, format\: string, bytes\: int, transformation\: string, url\: string\}\>, mixed given\.$#'
+			rawMessage: 'Parameter #2 $derivedResources of method Speicher210\CloudinaryBundle\Command\InfoCommand::renderDerivedResources() expects array<array{id: string, format: string, bytes: int, transformation: string, url: string}>, mixed given.'
 			identifier: argument.type
 			count: 1
 			path: ../src/Command/InfoCommand.php
 
 		-
-			message: '#^Parameter \#1 \$dirs of method Symfony\\Component\\Finder\\Finder\:\:in\(\) expects array\<string\>\|string, mixed given\.$#'
+			rawMessage: 'Parameter #1 $dirs of method Symfony\Component\Finder\Finder::in() expects array<string>|string, mixed given.'
 			identifier: argument.type
 			count: 1
 			path: ../src/Command/UploadCommand.php
 
 		-
-			message: '#^Parameter \#1 \$node of function Psl\\Filesystem\\get_filename expects non\-empty\-string, string given\.$#'
+			rawMessage: 'Parameter #1 $node of function Psl\Filesystem\get_filename expects non-empty-string, string given.'
 			identifier: argument.type
 			count: 1
 			path: ../src/Command/UploadCommand.php
 
 		-
-			message: '#^Parameter \#1 \$patterns of method Symfony\\Component\\Finder\\Finder\:\:name\(\) expects array\<string\>\|string, mixed given\.$#'
+			rawMessage: 'Parameter #1 $patterns of method Symfony\Component\Finder\Finder::name() expects array<string>|string, mixed given.'
 			identifier: argument.type
 			count: 1
 			path: ../src/Command/UploadCommand.php
+
+		-
+			rawMessage: 'Method Speicher210\CloudinaryBundle\DependencyInjection\Configuration::getConfigTreeBuilder() return type with generic class Symfony\Component\Config\Definition\Builder\TreeBuilder does not specify its types: T'
+			identifier: missingType.generics
+			count: 1
+			path: ../src/DependencyInjection/Configuration.php

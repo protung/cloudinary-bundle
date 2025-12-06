@@ -1,0 +1,51 @@
+services:
+  Speicher210\CloudinaryBundle\Factory\CloudinaryFactory:
+    public: false
+    arguments:
+      - [ ]
+
+  speicher210_cloudinary.cloudinary:
+    class: Speicher210\CloudinaryBundle\Cloudinary\Cloudinary
+    public: true
+    factory: [ '@Speicher210\CloudinaryBundle\Factory\CloudinaryFactory', 'createCloudinary' ]
+
+  Cloudinary\Cloudinary:
+    alias: speicher210_cloudinary.cloudinary
+    public: true
+
+  speicher210_cloudinary.uploader:
+    class: Speicher210\CloudinaryBundle\Cloudinary\Uploader
+    public: true
+    factory: [ '@speicher210_cloudinary.cloudinary', 'uploadApi' ]
+
+  speicher210_cloudinary.admin:
+    class: Speicher210\CloudinaryBundle\Cloudinary\Admin
+    public: true
+    factory: [ '@speicher210_cloudinary.cloudinary', 'adminApi' ]
+
+  twig.extension.cloudinary:
+    class: Speicher210\CloudinaryBundle\Twig\Extension\CloudinaryExtension
+    public: true
+    arguments:
+      - '@speicher210_cloudinary.cloudinary'
+    tags:
+      - { name: 'twig.extension' }
+
+  Speicher210\CloudinaryBundle\Command\DeleteCommand:
+    arguments:
+      - '@speicher210_cloudinary.admin'
+    tags:
+      - { name: 'console.command' }
+
+  Speicher210\CloudinaryBundle\Command\InfoCommand:
+    arguments:
+      - '@speicher210_cloudinary.admin'
+    tags:
+      - { name: 'console.command' }
+
+  Speicher210\CloudinaryBundle\Command\UploadCommand:
+    arguments:
+      - '@speicher210_cloudinary.uploader'
+    tags:
+      - { name: 'console.command' }
+
