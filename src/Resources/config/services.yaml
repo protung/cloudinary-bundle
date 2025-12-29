@@ -13,15 +13,23 @@ services:
     alias: speicher210_cloudinary.cloudinary
     public: true
 
-  speicher210_cloudinary.uploader:
+  Speicher210\CloudinaryBundle\Cloudinary\Uploader:
     class: Speicher210\CloudinaryBundle\Cloudinary\Uploader
     public: true
     factory: [ '@speicher210_cloudinary.cloudinary', 'uploadApi' ]
 
-  speicher210_cloudinary.admin:
+  speicher210_cloudinary.uploader:
+    alias: Speicher210\CloudinaryBundle\Cloudinary\Uploader
+    public: true
+
+  Speicher210\CloudinaryBundle\Cloudinary\Admin:
     class: Speicher210\CloudinaryBundle\Cloudinary\Admin
     public: true
     factory: [ '@speicher210_cloudinary.cloudinary', 'adminApi' ]
+
+  speicher210_cloudinary.admin:
+    alias: Speicher210\CloudinaryBundle\Cloudinary\Admin
+    public: true
 
   twig.extension.cloudinary:
     class: Speicher210\CloudinaryBundle\Twig\Extension\CloudinaryExtension
