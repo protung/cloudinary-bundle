@@ -1,0 +1,57 @@
+name: Build
+
+on:
+  push:
+    branches: [ '*.x' ]
+  pull_request:
+    branches: [ '*.x' ]
+  schedule:
+    - cron: '0 6 * * 1'
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        dependencies: [lowest, highest]
+        php-versions:
+          - 8.3
+          - 8.4
+          - 8.5
+    name: PHP ${{ matrix.php-versions }} checks with ${{ matrix.dependencies }} dependencies
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v7
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-versions }}
+          coverage: none
+
+      - name: Get composer cache directory
+        id: composer-cache
+        run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
+
+      - name: Cache dependencies
+        uses: actions/cache@v6
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: php-${{ matrix.php-versions }}-composer-${{ matrix.dependencies }}-${{ hashFiles('composer.json') }}
+          restore-keys: "php-${{ matrix.php-versions }}-composer-${{ matrix.dependencies }}-"
+
+      - name: Install lowest dependencies
+        if: ${{ matrix.dependencies == 'lowest' }}
+        run: composer update --prefer-lowest --prefer-dist --no-progress --no-interaction
+
+      - name: Install highest dependencies
+        if: ${{ matrix.dependencies == 'highest' }}
+        run: composer update --prefer-dist --no-progress --no-interaction
+
+      - name: Setup just
+        uses: extractions/setup-just@v4
+
+      - name: Run checks
+        run: just check
