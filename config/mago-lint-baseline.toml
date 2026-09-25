@@ -1,0 +1,25 @@
+variant = "loose"
+
+[[issues]]
+file = "src/Command/InfoCommand.php"
+code = "psl-math-functions"
+message = "Use the Psl math function instead of the PHP counterpart."
+count = 2
+
+[[issues]]
+file = "src/Factory/CloudinaryFactory.php"
+code = "no-isset"
+message = "Use of the `isset` construct."
+count = 1
+
+[[issues]]
+file = "tests/DependencyInjection/AbstractSpeicher210CloudinaryExtensionTestCase.php"
+code = "assertion-style"
+message = "Inconsistent assertions style."
+count = 6
+
+[[issues]]
+file = "tests/DependencyInjection/AbstractSpeicher210CloudinaryExtensionTestCase.php"
+code = "no-literal-password"
+message = "Literal passwords or sensitive data should not be stored in code."
+count = 2
