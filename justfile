@@ -59,7 +59,7 @@ cs-fix-composer:
 
 [doc("Run static analysis checks")]
 [group("Static analysis")]
-static-analysis: sa-phpstan
+static-analysis: sa-mago sa-phpstan
 
 [doc("Run PHPStan")]
 [group("PHPStan")]
@@ -70,6 +70,40 @@ sa-phpstan:
 [group("PHPStan")]
 sa-phpstan-update:
     vendor/bin/phpstan --configuration=config/phpstan.neon --generate-baseline=config/phpstan-baseline.neon --allow-empty-baseline
+
+[doc("Run all Mago checks")]
+[group("Mago")]
+sa-mago: sa-mago-lint sa-mago-analyze
+
+[doc("Run Mago linter")]
+[group("Mago")]
+sa-mago-lint:
+    vendor/bin/mago --config config/mago.toml lint --minimum-fail-level note --baseline config/mago-lint-baseline.toml --fail-on-out-of-sync-baseline
+
+[doc("Update Mago linter baseline")]
+[group("Mago")]
+sa-mago-lint-update:
+    vendor/bin/mago --config config/mago.toml lint --minimum-fail-level note --generate-baseline --baseline config/mago-lint-baseline.toml
+
+[doc("Fix Mago linter issues")]
+[group("Mago")]
+sa-mago-lint-fix:
+    vendor/bin/mago --config config/mago.toml lint --fix
+
+[doc("Run Mago analyzer")]
+[group("Mago")]
+sa-mago-analyze:
+    vendor/bin/mago --config config/mago.toml analyze --minimum-fail-level note --baseline config/mago-analyze-baseline.toml --fail-on-out-of-sync-baseline
+
+[doc("Update Mago analyzer baseline")]
+[group("Mago")]
+sa-mago-analyze-update:
+    vendor/bin/mago --config config/mago.toml analyze --minimum-fail-level note --generate-baseline --baseline config/mago-analyze-baseline.toml
+
+[doc("Fix Mago analyzer issues")]
+[group("Mago")]
+sa-mago-analyze-fix:
+    vendor/bin/mago --config config/mago.toml analyze --fix --baseline config/mago-analyze-baseline.toml
 
 [doc("Run security checks")]
 [group("Security")]
