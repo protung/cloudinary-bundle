@@ -1,23 +1,22 @@
-# Speicher210 CloudinaryBundle
+Cloudinary Bundle
+=================
 
-[![Latest Version](https://img.shields.io/github/tag/protung/cloudinary-bundle.svg?style=flat-square)](https://github.com/Speicher210/CloudinaryBundle/releases)
-[![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE.md)
-![GitHub branch checks state](https://img.shields.io/github/checks-status/protung/cloudinary-bundle/1.x?style=flat-square)
+[![Build](https://github.com/protung/cloudinary-bundle/actions/workflows/build.yml/badge.svg?branch=1.x)](https://github.com/protung/cloudinary-bundle/actions/workflows/build.yml?query=branch%3A1.x)
+[![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](LICENSE.md)
 
-## Install
+Symfony bundle for the [Cloudinary PHP SDK](https://github.com/cloudinary/cloudinary_php).
 
-Add [`speicher210/cloudinary-bundle`](https://packagist.org/packages/speicher210/CloudinaryBundle) to your `composer.json` file:
+## Installation
 
-``` bash
-composer require "speicher210/cloudinary-bundle"
+Require using composer:
+
+```shell
+$ composer require speicher210/cloudinary-bundle
 ```
 
-Register the bundle:
+Symfony Flex registers the bundle. Without Flex, add it to `config/bundles.php`:
 
-``` php
-<?php
-// config/bundles.php
-
+```php
 return [
     // ...
     Speicher210\CloudinaryBundle\Speicher210CloudinaryBundle::class => ['all' => true],
@@ -25,59 +24,96 @@ return [
 ];
 ```
 
-## Usage
+## Configuration
 
-Configure the connection to cloudinary in your `config.yaml` :
+Configure the cloud and the credentials with the `CLOUDINARY_URL` from the Cloudinary console, in the form `cloudinary://api_key:api_secret@cloud_name`:
 
-``` yaml
+```yaml
+# config/packages/speicher210_cloudinary.yaml
 speicher210_cloudinary:
-    url: cloudinary://my-key:my-secret@my-cloud
-    # The next configuration variables should be defined if they are not present in the URL
-    # The URL will take precedence
+    url: '%env(CLOUDINARY_URL)%'
+```
+
+Or set them one by one. Values from the URL take precedence:
+
+```yaml
+speicher210_cloudinary:
     cloud_name: my-cloud
     access_identifier:
         api_key: my-key
         api_secret: my-secret
-    secure: true
+    secure: true # HTTPS URLs, the default
 ```
 
-The following services will be available:
+## Usage
 
-``` php
-$this->get('speicher210_cloudinary.cloudinary'); // Extension of Cloudinary from cloudinary package.
+### Services
 
-$this->get('speicher210_cloudinary.api'); // Extension of Cloudinary\Api from cloudinary package.
+| Service id                          | Class                                                | Autowired by                                       |
+|-------------------------------------|------------------------------------------------------|----------------------------------------------------|
+| `speicher210_cloudinary.cloudinary` | `Speicher210\CloudinaryBundle\Cloudinary\Cloudinary` | `Cloudinary\Cloudinary`                            |
+| `speicher210_cloudinary.admin`      | `Speicher210\CloudinaryBundle\Cloudinary\Admin`      | `Speicher210\CloudinaryBundle\Cloudinary\Admin`    |
+| `speicher210_cloudinary.uploader`   | `Speicher210\CloudinaryBundle\Cloudinary\Uploader`   | `Speicher210\CloudinaryBundle\Cloudinary\Uploader` |
 
-$this->get('speicher210_cloudinary.uploader'); // Extension of Cloudinary\Uploader from cloudinary package.
+The classes extend the SDK's `Cloudinary\Cloudinary`, `Cloudinary\Api\Admin\AdminApi` and
+`Cloudinary\Api\Upload\UploadApi`, configured by the bundle:
+
+```php
+use Speicher210\CloudinaryBundle\Cloudinary\Uploader;
+
+final readonly class AvatarStorage
+{
+    public function __construct(private Uploader $uploader)
+    {
+    }
+
+    public function store(string $file, string $userId): string
+    {
+        return $this->uploader->upload($file, ['public_id' => 'avatars/' . $userId])['secure_url'];
+    }
+}
 ```
 
-You can pass the same options to the twig filter or function:
+### Twig
 
-``` twig
-{{ cloudinary-public-id | cloudinary_url({'width': 50, 'height': 50, 'crop': 'fill'}) }}
-{{ cloudinary_url('cloudinary-public-id', {'width': 50, 'height': 50, 'crop': 'fill'}) }}
-{{ cloudinary_image_tag('cloudinary-public-id', {'height' : 150}) }}
-{{ cloudinary_video_tag('cloudinary-public-id', {'height' : 150}) }}
+With TwigBundle enabled, the bundle adds Twig functions, also available as filters, for the URL of an image and for
+image, picture and video tags. The options of `cloudinary_url` are
+[transformation parameters](https://cloudinary.com/documentation/transformation_reference):
+
+```twig
+{{ cloudinary_url('sample') }}
+{{ 'sample'|cloudinary_url({'width': 100, 'height': 100, 'crop': 'fill'}) }}
+
+{{ cloudinary_image_tag('sample') }}
+{{ cloudinary_picture_tag('sample') }}
+{{ cloudinary_video_tag('dog') }}
 ```
 
-For further documentation see [Cloudinary PHP library](https://github.com/cloudinary/cloudinary_php)
+### Console commands
 
-## Contributing
+```shell
+# Upload the files of a directory, subdirectories included. The public ID of a file is the prefix followed by its
+# name without the extension; an existing asset with the same public ID is overwritten.
+$ bin/console sp210:cloudinary:upload path/to/images --prefix=products/ --filter='*.jpg'
 
-Please see [CONTRIBUTING](CONTRIBUTING.md) for details.
+# Show the properties of an asset, with -v also its derived resources.
+$ bin/console sp210:cloudinary:info products/shoe -v
 
-## Security
+# Delete the assets with a public ID prefix, or one asset. Asks for confirmation first.
+$ bin/console sp210:cloudinary:delete --prefix=products/
+$ bin/console sp210:cloudinary:delete --resource=products/shoe
+```
 
-If you discover any security related issues, please email instead of using the issue tracker.
+## Development
 
-## Credits
+The tools are run through [just](https://github.com/casey/just) (`just --list` shows every recipe):
 
-- [Dragos Protung](https://github.com/dragosprotung)
-- [All contributors][link-contributors]
+```shell
+$ just check             # coding standard, static analysis, composer audit and tests
+$ just test              # tests
+$ just update-snapshots  # regenerate the expected output of the console commands
+```
 
 ## License
 
-The MIT License (MIT). Please see [License File](LICENSE) for more information.
-
-
-[link-contributors]: ../../contributors
+This package is released under the [MIT license](LICENSE.md).
