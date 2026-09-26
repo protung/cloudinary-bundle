@@ -1,0 +1,17 @@
+ ----------- -------------- 
+  Property    Value         
+ ----------- -------------- 
+  public_id   folder/image  
+  format      jpg           
+  bytes       2048          
+ ----------- -------------- 
+
+ ---------------------------------------------------------------------------------------------------------------- 
+  Derived resources                                                                                               
+ ------ -------- -------- ---------------- ---------------------------------------------------------------------- 
+  ID     Format   Size     Transformation   URL                                                                   
+ ------ -------- -------- ---------------- ---------------------------------------------------------------------- 
+  d1     webp     512 b    w_100            https://res.cloudinary.com/demo/image/upload/w_100/folder/image.webp  
+  d2     avif     2.0 kB   w_200            https://res.cloudinary.com/demo/image/upload/w_200/folder/image.avif  
+  d3     png      1.5 MB   w_2000           https://res.cloudinary.com/demo/image/upload/w_2000/folder/image.png  
+ ------ -------- -------- ---------------- ---------------------------------------------------------------------- 

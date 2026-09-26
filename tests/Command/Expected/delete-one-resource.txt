@@ -1,0 +1,9 @@
+
+ Are you sure you want to remove all resources based on your criteria? (yes/no) [no]:
+ > 
+Removing resource folder/image
+ -------------- --------- 
+  Resource       Status   
+ -------------- --------- 
+  folder/image   deleted  
+ -------------- --------- 

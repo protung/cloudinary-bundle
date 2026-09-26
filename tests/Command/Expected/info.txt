@@ -1,0 +1,7 @@
+ ----------- -------------- 
+  Property    Value         
+ ----------- -------------- 
+  public_id   folder/image  
+  format      jpg           
+  bytes       2048          
+ ----------- -------------- 
