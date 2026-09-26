@@ -123,6 +123,11 @@ test: test-php
 test-php *args="":
     vendor/bin/phpunit -c config/phpunit.xml.dist {{ args }}
 
+[doc("Regenerate the expected command output (review the diff!)")]
+[group("Tests")]
+update-snapshots:
+    UPDATE_SNAPSHOTS=1 vendor/bin/phpunit -c config/phpunit.xml.dist tests/Command
+
 [doc("Run all checks")]
 [group("Aggregate")]
 check: coding-standard-check static-analysis security-analysis test
