@@ -9,20 +9,16 @@ use Cloudinary\Api\Exception\BadRequest;
 use Override;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
+use Psl\Env;
+use Psl\Filesystem;
+use Psl\SecureRandom;
 use Psl\Type;
+use Psl\Vec;
 use Speicher210\CloudinaryBundle\Cloudinary\Uploader;
 use Speicher210\CloudinaryBundle\Command\UploadCommand;
 use Symfony\Component\Console\Tester\CommandTester;
 
-use function mkdir;
 use function preg_quote;
-use function realpath;
-use function rmdir;
-use function sort;
-use function sys_get_temp_dir;
-use function touch;
-use function uniqid;
-use function unlink;
 
 /**
  * The table shows absolute paths, so its column widths depend on where the tests run: the display is not compared with
@@ -33,29 +29,26 @@ final class UploadCommandTest extends TestCase
 {
     private const array FILE_NAMES = ['document.pdf', 'logo.png', 'photo.jpg'];
 
+    /** @var non-empty-string */
     private string $directory;
 
     #[Override]
     protected function setUp(): void
     {
-        $directory = sys_get_temp_dir() . '/' . uniqid('cloudinary-bundle-upload-', true);
-        mkdir($directory);
+        $directory = Env\temp_dir() . '/cloudinary-bundle-upload-' . SecureRandom\string(16);
+        Filesystem\create_directory($directory);
         foreach (self::FILE_NAMES as $fileName) {
-            touch($directory . '/' . $fileName);
+            Filesystem\create_file($directory . '/' . $fileName);
         }
 
         // The command shows real paths, and the temporary directory may be behind a symbolic link.
-        $this->directory = Type\string()->assert(realpath($directory));
+        $this->directory = Type\non_empty_string()->coerce(Filesystem\canonicalize($directory));
     }
 
     #[Override]
     protected function tearDown(): void
     {
-        foreach (self::FILE_NAMES as $fileName) {
-            unlink($this->directory . '/' . $fileName);
-        }
-
-        rmdir($this->directory);
+        Filesystem\delete_directory($this->directory, recursive: true);
     }
 
     public function testUploadsEveryFileWithThePrefixedFileNameAsPublicId(): void
@@ -78,14 +71,13 @@ final class UploadCommandTest extends TestCase
 
         $commandTester->assertCommandIsSuccessful();
 
-        sort($uploads);
         self::assertSame(
             [
                 [$this->directory . '/document.pdf', ['public_id' => 'uploads/document']],
                 [$this->directory . '/logo.png', ['public_id' => 'uploads/logo']],
                 [$this->directory . '/photo.jpg', ['public_id' => 'uploads/photo']],
             ],
-            $uploads,
+            Vec\sort($uploads),
         );
 
         $display = $commandTester->getDisplay();

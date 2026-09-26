@@ -39,12 +39,6 @@ count = 4
 [[issues]]
 file = "src/Command/InfoCommand.php"
 code = "invalid-array-index"
-message = "Invalid index type `int` used for array access on `string('kMGTPE')`."
-count = 1
-
-[[issues]]
-file = "src/Command/InfoCommand.php"
-code = "invalid-array-index"
 message = '''Invalid index type `string('derived')` used for array access on `Cloudinary\Api\ApiResponse`.'''
 count = 1
 
@@ -58,12 +52,6 @@ count = 1
 file = "src/Command/InfoCommand.php"
 code = "mixed-argument"
 message = 'Invalid argument type for argument #1 of `Cloudinary\Api\Admin\AssetsTrait::asset`: expected `string`, but found `mixed`.'
-count = 1
-
-[[issues]]
-file = "src/Command/InfoCommand.php"
-code = "possibly-invalid-operand"
-message = "Possibly invalid type for right operand."
 count = 1
 
 [[issues]]

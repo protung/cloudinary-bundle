@@ -5,11 +5,9 @@ declare(strict_types=1);
 namespace Speicher210\CloudinaryBundle\Tests\Command;
 
 use PHPUnit\Framework\Assert;
+use Psl\Env;
+use Psl\File;
 use Psl\Regex;
-
-use function file_get_contents;
-use function file_put_contents;
-use function getenv;
 
 trait DisplaySnapshots
 {
@@ -22,13 +20,11 @@ trait DisplaySnapshots
     {
         $file = __DIR__ . '/Expected/' . $snapshot . '.txt';
 
-        if (getenv('UPDATE_SNAPSHOTS') === '1') {
-            file_put_contents($file, $display);
+        if (Env\get_var('UPDATE_SNAPSHOTS') === '1') {
+            File\write($file, $display, File\WriteMode::Truncate);
         }
 
-        $expected = file_get_contents($file);
-        Assert::assertIsString($expected, 'Missing snapshot ' . $file);
-        Assert::assertSame(self::normalizeDisplay($expected), self::normalizeDisplay($display));
+        Assert::assertSame(self::normalizeDisplay(File\read($file)), self::normalizeDisplay($display));
     }
 
     /**
