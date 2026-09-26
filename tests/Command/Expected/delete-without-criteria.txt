@@ -1,0 +1,3 @@
+
+ [ERROR] Choose the resources to remove with --prefix or --resource.            
+

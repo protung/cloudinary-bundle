@@ -50,6 +50,18 @@ final class DeleteCommand extends Command
     {
         $symfonyStyle = new SymfonyStyle($input, $output);
 
+        if ($input->getOption('prefix') === '' || $input->getOption('resource') === '') {
+            $symfonyStyle->error('--prefix and --resource can not be empty.');
+
+            return Command::INVALID;
+        }
+
+        if ($input->getOption('prefix') === null && $input->getOption('resource') === null) {
+            $symfonyStyle->error('Choose the resources to remove with --prefix or --resource.');
+
+            return Command::INVALID;
+        }
+
         $confirm = $symfonyStyle->confirm('Are you sure you want to remove all resources based on your criteria?', false);
 
         if ($confirm !== true) {
