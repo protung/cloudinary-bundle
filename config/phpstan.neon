@@ -6,7 +6,6 @@ parameters:
         - ../src
         - ../tests
     treatPhpDocTypesAsCertain: false
-    reportUnmatchedIgnoredErrors: false # we might run the check against different versions of PHP or libraries that might have / not have reported errors
 
 includes:
     - phpstan-baseline.neon

@@ -7,6 +7,7 @@ namespace Speicher210\CloudinaryBundle\Command;
 use Cloudinary\Api\ApiResponse;
 use Override;
 use Psl\Str;
+use Psl\Type;
 use Speicher210\CloudinaryBundle\Cloudinary\Admin;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -50,13 +51,16 @@ final class DeleteCommand extends Command
     {
         $symfonyStyle = new SymfonyStyle($input, $output);
 
-        if ($input->getOption('prefix') === '' || $input->getOption('resource') === '') {
+        $prefix   = Type\nullable(Type\string())->coerce($input->getOption('prefix'));
+        $resource = Type\nullable(Type\string())->coerce($input->getOption('resource'));
+
+        if ($prefix === '' || $resource === '') {
             $symfonyStyle->error('--prefix and --resource can not be empty.');
 
             return Command::INVALID;
         }
 
-        if ($input->getOption('prefix') === null && $input->getOption('resource') === null) {
+        if ($prefix === null && $resource === null) {
             $symfonyStyle->error('Choose the resources to remove with --prefix or --resource.');
 
             return Command::INVALID;
@@ -68,20 +72,19 @@ final class DeleteCommand extends Command
             return Command::SUCCESS;
         }
 
-        if ($input->getOption('prefix') !== null) {
-            $this->removeByPrefix($input, $symfonyStyle);
+        if ($prefix !== null) {
+            $this->removeByPrefix($prefix, $symfonyStyle);
         }
 
-        if ($input->getOption('resource') !== null) {
-            $this->removeResource($input, $symfonyStyle);
+        if ($resource !== null) {
+            $this->removeResource($resource, $symfonyStyle);
         }
 
         return Command::SUCCESS;
     }
 
-    private function removeByPrefix(InputInterface $input, SymfonyStyle $symfonyStyle): void
+    private function removeByPrefix(string $prefix, SymfonyStyle $symfonyStyle): void
     {
-        $prefix = $input->getOption('prefix');
         $symfonyStyle->writeln(
             Str\format('<comment>Removing all resources from <info>%s</info></comment>', $prefix),
         );
@@ -90,9 +93,8 @@ final class DeleteCommand extends Command
         $this->outputApiResponse($response, $symfonyStyle);
     }
 
-    private function removeResource(InputInterface $input, SymfonyStyle $symfonyStyle): void
+    private function removeResource(string $resource, SymfonyStyle $symfonyStyle): void
     {
-        $resource = $input->getOption('resource');
         $symfonyStyle->writeln(
             Str\format('<comment>Removing resource <info>%s</info></comment>', $resource),
         );
@@ -106,8 +108,11 @@ final class DeleteCommand extends Command
         $table = $symfonyStyle->createTable();
         $table->setHeaders(['Resource', 'Status']);
 
-        foreach ($response['deleted'] as $file => $status) {
-            $table->addRow([$file, $status]);
+        $deleted = Type\shape(['deleted' => Type\dict(Type\array_key(), Type\string())], true)
+            ->coerce($response->getArrayCopy())['deleted'];
+
+        foreach ($deleted as $publicId => $status) {
+            $table->addRow([$publicId, $status]);
         }
 
         $table->render();
