@@ -15,7 +15,7 @@ final readonly class CloudinaryFactory
     private Configuration $configuration;
 
     /**
-     * @param array{url?: string, cloud_name?: string, access_identifier?: array{api_key: string, api_secret: string}, secure?: bool} $config
+     * @param array{url?: string, cloud_name?: string, access_identifier?: array{api_key: string, api_secret: string}, secure?: bool, analytics?: bool} $config
      */
     public function __construct(array $config)
     {
@@ -52,6 +52,7 @@ final readonly class CloudinaryFactory
                 ],
                 'url' => [
                     'secure' => $config['secure'] ?? true,
+                    'analytics' => $config['analytics'] ?? false,
                 ],
             ],
         );

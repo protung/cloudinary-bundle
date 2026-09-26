@@ -33,6 +33,10 @@ final class Configuration implements ConfigurationInterface
                     ->end()
                 ->end()
                 ->booleanNode('secure')->defaultTrue()->end()
+                ->booleanNode('analytics')
+                    ->info('Whether URLs carry Cloudinary\'s usage statistics (?_a=…), which encode the SDK and PHP versions.')
+                    ->defaultFalse()
+                ->end()
             ->end();
 
         return $treeBuilder;

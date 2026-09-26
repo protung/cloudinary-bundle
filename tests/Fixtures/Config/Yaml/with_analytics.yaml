@@ -1,0 +1,3 @@
+speicher210_cloudinary:
+    url: cloudinary://key:secret@name
+    analytics: true
