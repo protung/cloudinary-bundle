@@ -50,11 +50,11 @@ speicher210_cloudinary:
 
 ### Services
 
-| Service id                          | Class                                                | Autowired by                                       |
-|-------------------------------------|------------------------------------------------------|----------------------------------------------------|
-| `speicher210_cloudinary.cloudinary` | `Speicher210\CloudinaryBundle\Cloudinary\Cloudinary` | `Cloudinary\Cloudinary`                            |
-| `speicher210_cloudinary.admin`      | `Speicher210\CloudinaryBundle\Cloudinary\Admin`      | `Speicher210\CloudinaryBundle\Cloudinary\Admin`    |
-| `speicher210_cloudinary.uploader`   | `Speicher210\CloudinaryBundle\Cloudinary\Uploader`   | `Speicher210\CloudinaryBundle\Cloudinary\Uploader` |
+| Service id                          | Class                                                | Autowired by                                                                  |
+|-------------------------------------|------------------------------------------------------|-------------------------------------------------------------------------------|
+| `speicher210_cloudinary.cloudinary` | `Speicher210\CloudinaryBundle\Cloudinary\Cloudinary` | `Speicher210\CloudinaryBundle\Cloudinary\Cloudinary`, `Cloudinary\Cloudinary` |
+| `speicher210_cloudinary.admin`      | `Speicher210\CloudinaryBundle\Cloudinary\Admin`      | `Speicher210\CloudinaryBundle\Cloudinary\Admin`                               |
+| `speicher210_cloudinary.uploader`   | `Speicher210\CloudinaryBundle\Cloudinary\Uploader`   | `Speicher210\CloudinaryBundle\Cloudinary\Uploader`                            |
 
 The classes extend the SDK's `Cloudinary\Cloudinary`, `Cloudinary\Api\Admin\AdminApi` and
 `Cloudinary\Api\Upload\UploadApi`, configured by the bundle:

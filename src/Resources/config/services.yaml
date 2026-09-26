@@ -9,6 +9,10 @@ services:
     public: true
     factory: [ '@Speicher210\CloudinaryBundle\Factory\CloudinaryFactory', 'createCloudinary' ]
 
+  Speicher210\CloudinaryBundle\Cloudinary\Cloudinary:
+    alias: speicher210_cloudinary.cloudinary
+    public: true
+
   Cloudinary\Cloudinary:
     alias: speicher210_cloudinary.cloudinary
     public: true

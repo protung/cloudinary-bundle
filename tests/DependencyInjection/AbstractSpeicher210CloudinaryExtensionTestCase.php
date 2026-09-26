@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Speicher210\CloudinaryBundle\Tests\DependencyInjection;
 
+use Cloudinary\Cloudinary as SdkCloudinary;
 use Cloudinary\Configuration\Configuration;
 use Override;
 use PHPUnit\Framework\TestCase;
@@ -58,6 +59,17 @@ abstract class AbstractSpeicher210CloudinaryExtensionTestCase extends TestCase
 
         $this->assertDefaultConfig($cloudinary->configuration);
         self::assertStringNotContainsString('_a=', (string) $cloudinary->image('sample')->toUrl());
+    }
+
+    public function testCloudinaryServiceCanBeAutowiredByTheBundleAndTheSdkClass(): void
+    {
+        $this->loadConfiguration($this->container, 'default');
+        $this->container->compile();
+
+        $cloudinary = $this->container->get('speicher210_cloudinary.cloudinary');
+
+        self::assertSame($cloudinary, $this->container->get(Cloudinary::class));
+        self::assertSame($cloudinary, $this->container->get(SdkCloudinary::class));
     }
 
     public function testUploaderService(): void
