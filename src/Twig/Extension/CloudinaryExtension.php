@@ -4,11 +4,9 @@ declare(strict_types=1);
 
 namespace Speicher210\CloudinaryBundle\Twig\Extension;
 
-use Cloudinary\Configuration\Configuration;
-use Cloudinary\Tag\ImageTag;
 use Cloudinary\Tag\PictureTag;
-use Cloudinary\Tag\VideoTag;
 use Cloudinary\Transformation\ImageTransformation;
+use Cloudinary\Transformation\VideoTransformation;
 use Override;
 use Speicher210\CloudinaryBundle\Cloudinary\Cloudinary;
 use Twig\Extension\AbstractExtension;
@@ -19,17 +17,9 @@ final class CloudinaryExtension extends AbstractExtension
 {
     private Cloudinary $cloudinary;
 
-    /** @var array<mixed> */
-    private array $defaultConfiguration;
-
-    /**
-     * @param Cloudinary   $cloudinary           The cloudinary library.
-     * @param array<mixed> $defaultConfiguration
-     */
-    public function __construct(Cloudinary $cloudinary, array $defaultConfiguration = ['analytics' => false])
+    public function __construct(Cloudinary $cloudinary)
     {
-        $this->cloudinary           = $cloudinary;
-        $this->defaultConfiguration = $defaultConfiguration;
+        $this->cloudinary = $cloudinary;
     }
 
     /**
@@ -64,61 +54,63 @@ final class CloudinaryExtension extends AbstractExtension
      * Get the cloudinary URL.
      *
      * @param string       $id      Public ID.
-     * @param array<mixed> $options options for the image.
+     * @param array<mixed> $options Transformation parameters.
      */
     public function getUrl(string $id, array $options = []): string
     {
         return (string) $this->cloudinary
             ->image($id)
-            ->toUrl(ImageTransformation::fromParams($this->options($options)));
+            ->toUrl(ImageTransformation::fromParams($options));
     }
 
     /**
      * Get the cloudinary image tag.
      *
-     * @param string       $id      Public ID.
-     * @param array<mixed> $options options for the image.
+     * @param string               $id         Public ID.
+     * @param array<mixed>         $options    Transformation parameters.
+     * @param array<string, mixed> $attributes HTML attributes of the img tag.
      */
-    public function getImageTag(string $id, array $options = []): string
+    public function getImageTag(string $id, array $options = [], array $attributes = []): string
     {
-        $imageTag = new ImageTag($id, Configuration::fromParams($this->options($options)));
-
-        return $imageTag->toTag();
+        return $this->cloudinary
+            ->imageTag($id)
+            ->addTransformation(ImageTransformation::fromParams($options))
+            ->setAttributes($attributes)
+            ->toTag();
     }
 
     /**
      * Get the cloudinary picture tag.
      *
-     * @param string       $id      Public ID.
-     * @param array<mixed> $options Options for the image.
+     * @param string               $id         Public ID.
+     * @param array<mixed>         $options    Transformation parameters.
+     * @param array<string, mixed> $attributes HTML attributes of the img tag inside the picture tag.
      */
-    public function getPictureTag(string $id, array $options = []): string
+    public function getPictureTag(string $id, array $options = [], array $attributes = []): string
     {
-        $videoTag = new PictureTag($id, [], Configuration::fromParams($this->options($options)));
+        $pictureTag = new PictureTag(
+            $this->cloudinary->image($id)->addTransformation(ImageTransformation::fromParams($options)),
+            [],
+            $this->cloudinary->configuration,
+        );
+        $pictureTag->imageTag->setAttributes($attributes);
 
-        return $videoTag->toTag();
+        return $pictureTag->toTag();
     }
 
     /**
      * Get the cloudinary video tag.
      *
-     * @param string       $id      Public ID.
-     * @param array<mixed> $options Options for the image.
+     * @param string               $id         Public ID.
+     * @param array<mixed>         $options    Transformation parameters.
+     * @param array<string, mixed> $attributes HTML attributes of the video tag.
      */
-    public function getVideoTag(string $id, array $options = []): string
+    public function getVideoTag(string $id, array $options = [], array $attributes = []): string
     {
-        $videoTag = new VideoTag($id, null, Configuration::fromParams($this->options($options)));
-
-        return $videoTag->toTag();
-    }
-
-    /**
-     * @param array<mixed> $options
-     *
-     * @return array<mixed>
-     */
-    private function options(array $options): array
-    {
-        return [...$this->defaultConfiguration, ...$options];
+        return $this->cloudinary
+            ->videoTag($id)
+            ->addTransformation(VideoTransformation::fromParams($options))
+            ->setAttributes($attributes)
+            ->toTag();
     }
 }

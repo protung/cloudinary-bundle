@@ -29,103 +29,147 @@ final class CloudinaryExtensionTest extends TestCase
 
     public function testUrlFunction(): void
     {
-        $template = $this->twig->createTemplate('{{ cloudinary_url(url) }}');
-
         self::assertSame(
             'https://res.cloudinary.com/test/image/upload/id',
-            $template->render(['url' => 'id']),
+            $this->render('{{ cloudinary_url(id) }}'),
         );
     }
 
     public function testUrlFilter(): void
     {
-        $template = $this->twig->createTemplate('{{ url | cloudinary_url }}');
-
         self::assertSame(
             'https://res.cloudinary.com/test/image/upload/id',
-            $template->render(['url' => 'id']),
+            $this->render('{{ id | cloudinary_url }}'),
+        );
+    }
+
+    public function testUrlWithTransformation(): void
+    {
+        self::assertSame(
+            'https://res.cloudinary.com/test/image/upload/c_fill,h_80,w_100/id',
+            $this->render("{{ cloudinary_url(id, {'width': 100, 'height': 80, 'crop': 'fill'}) }}"),
         );
     }
 
     public function testImageTagFunction(): void
     {
-        $template = $this->twig->createTemplate('{{ cloudinary_image_tag(url) }}');
-
         self::assertSame(
-            '<img src="https://res.cloudinary.com//image/upload/id">',
-            $template->render(['url' => 'id']),
+            '<img src="https://res.cloudinary.com/test/image/upload/id">',
+            $this->render('{{ cloudinary_image_tag(id) }}'),
         );
     }
 
     public function testImageTagFilter(): void
     {
-        $template = $this->twig->createTemplate('{{ url | cloudinary_image_tag }}');
-
         self::assertSame(
-            '<img src="https://res.cloudinary.com//image/upload/id">',
-            $template->render(['url' => 'id']),
+            '<img src="https://res.cloudinary.com/test/image/upload/id">',
+            $this->render('{{ id | cloudinary_image_tag }}'),
+        );
+    }
+
+    public function testImageTagWithTransformationAndAttributes(): void
+    {
+        self::assertSame(
+            '<img alt="A sample" class="thumb" src="https://res.cloudinary.com/test/image/upload/c_scale,w_100/id">',
+            $this->render("{{ cloudinary_image_tag(id, {'width': 100, 'crop': 'scale'}, {'alt': 'A sample', 'class': 'thumb'}) }}"),
+        );
+        self::assertSame(
+            '<img alt="A sample" src="https://res.cloudinary.com/test/image/upload/c_scale,w_100/id">',
+            $this->render("{{ id | cloudinary_image_tag({'width': 100, 'crop': 'scale'}, {'alt': 'A sample'}) }}"),
+        );
+    }
+
+    public function testImageTagEscapesTheAttributes(): void
+    {
+        self::assertSame(
+            '<img alt="&quot;&gt;&lt;script&gt;" src="https://res.cloudinary.com/test/image/upload/id">',
+            $this->render("{{ cloudinary_image_tag(id, {}, {'alt': '\"><script>'}) }}"),
         );
     }
 
     public function testPictureTagFunction(): void
     {
-        $template = $this->twig->createTemplate('{{ cloudinary_picture_tag(url) }}');
-
         self::assertSame(
             <<<'HTML'
             <picture>
-            <img src="https://res.cloudinary.com//image/upload/id">
+            <img src="https://res.cloudinary.com/test/image/upload/id">
             </picture>
             HTML,
-            $template->render(['url' => 'id']),
+            $this->render('{{ cloudinary_picture_tag(id) }}'),
         );
     }
 
     public function testPictureTagFilter(): void
     {
-        $template = $this->twig->createTemplate('{{ url | cloudinary_picture_tag }}');
-
         self::assertSame(
             <<<'HTML'
             <picture>
-            <img src="https://res.cloudinary.com//image/upload/id">
+            <img src="https://res.cloudinary.com/test/image/upload/id">
             </picture>
             HTML,
-            $template->render(['url' => 'id']),
+            $this->render('{{ id | cloudinary_picture_tag }}'),
+        );
+    }
+
+    public function testPictureTagWithTransformationAndAttributesOnTheImage(): void
+    {
+        self::assertSame(
+            <<<'HTML'
+            <picture>
+            <img alt="A sample" src="https://res.cloudinary.com/test/image/upload/c_scale,w_100/id">
+            </picture>
+            HTML,
+            $this->render("{{ cloudinary_picture_tag(id, {'width': 100, 'crop': 'scale'}, {'alt': 'A sample'}) }}"),
         );
     }
 
     public function testVideoTagFunction(): void
     {
-        $template = $this->twig->createTemplate('{{ cloudinary_video_tag(url) }}');
-
         self::assertSame(
             <<<'HTML'
-            <video poster="https://res.cloudinary.com//video/upload/id.jpg">
-            <source src="https://res.cloudinary.com//video/upload/vc_h265/id.mp4" type="video/mp4; codecs=hev1">
-            <source src="https://res.cloudinary.com//video/upload/vc_vp9/id.webm" type="video/webm; codecs=vp9">
-            <source src="https://res.cloudinary.com//video/upload/vc_auto/id.mp4" type="video/mp4">
-            <source src="https://res.cloudinary.com//video/upload/vc_auto/id.webm" type="video/webm">
+            <video poster="https://res.cloudinary.com/test/video/upload/id.jpg">
+            <source src="https://res.cloudinary.com/test/video/upload/vc_h265/id.mp4" type="video/mp4; codecs=hev1">
+            <source src="https://res.cloudinary.com/test/video/upload/vc_vp9/id.webm" type="video/webm; codecs=vp9">
+            <source src="https://res.cloudinary.com/test/video/upload/vc_auto/id.mp4" type="video/mp4">
+            <source src="https://res.cloudinary.com/test/video/upload/vc_auto/id.webm" type="video/webm">
             </video>
             HTML,
-            $template->render(['url' => 'id']),
+            $this->render('{{ cloudinary_video_tag(id) }}'),
         );
     }
 
     public function testVideoTagFilter(): void
     {
-        $template = $this->twig->createTemplate('{{ url | cloudinary_video_tag }}');
-
         self::assertSame(
             <<<'HTML'
-            <video poster="https://res.cloudinary.com//video/upload/id.jpg">
-            <source src="https://res.cloudinary.com//video/upload/vc_h265/id.mp4" type="video/mp4; codecs=hev1">
-            <source src="https://res.cloudinary.com//video/upload/vc_vp9/id.webm" type="video/webm; codecs=vp9">
-            <source src="https://res.cloudinary.com//video/upload/vc_auto/id.mp4" type="video/mp4">
-            <source src="https://res.cloudinary.com//video/upload/vc_auto/id.webm" type="video/webm">
+            <video poster="https://res.cloudinary.com/test/video/upload/id.jpg">
+            <source src="https://res.cloudinary.com/test/video/upload/vc_h265/id.mp4" type="video/mp4; codecs=hev1">
+            <source src="https://res.cloudinary.com/test/video/upload/vc_vp9/id.webm" type="video/webm; codecs=vp9">
+            <source src="https://res.cloudinary.com/test/video/upload/vc_auto/id.mp4" type="video/mp4">
+            <source src="https://res.cloudinary.com/test/video/upload/vc_auto/id.webm" type="video/webm">
             </video>
             HTML,
-            $template->render(['url' => 'id']),
+            $this->render('{{ id | cloudinary_video_tag }}'),
         );
+    }
+
+    public function testVideoTagWithTransformationAndAttributes(): void
+    {
+        self::assertSame(
+            <<<'HTML'
+            <video controls poster="https://res.cloudinary.com/test/video/upload/c_scale,w_300/id.jpg">
+            <source src="https://res.cloudinary.com/test/video/upload/c_scale,w_300/vc_h265/id.mp4" type="video/mp4; codecs=hev1">
+            <source src="https://res.cloudinary.com/test/video/upload/c_scale,w_300/vc_vp9/id.webm" type="video/webm; codecs=vp9">
+            <source src="https://res.cloudinary.com/test/video/upload/c_scale,w_300/vc_auto/id.mp4" type="video/mp4">
+            <source src="https://res.cloudinary.com/test/video/upload/c_scale,w_300/vc_auto/id.webm" type="video/webm">
+            </video>
+            HTML,
+            $this->render("{{ cloudinary_video_tag(id, {'width': 300, 'crop': 'scale'}, {'controls': true}) }}"),
+        );
+    }
+
+    private function render(string $template): string
+    {
+        return $this->twig->createTemplate($template)->render(['id' => 'id']);
     }
 }
