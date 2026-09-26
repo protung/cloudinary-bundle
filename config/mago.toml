@@ -30,9 +30,7 @@ interface-name = { enabled = false }
 trait-name = { enabled = false }
 yoda-conditions = { enabled = false }
 assertion-style = { style = "self" }
-psl-array-functions = { enabled = false }
 psl-datetime = { enabled = false }
-psl-string-functions = { enabled = false }
 
 [analyzer]
 plugins = ["psl"]

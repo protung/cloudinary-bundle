@@ -6,6 +6,9 @@ namespace Speicher210\CloudinaryBundle\Command;
 
 use Cloudinary\Api\ApiResponse;
 use Override;
+use Psl\Iter;
+use Psl\Math;
+use Psl\Str;
 use Speicher210\CloudinaryBundle\Cloudinary\Admin;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\TableCell;
@@ -15,9 +18,6 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
 use function is_scalar;
-use function log;
-use function pow;
-use function sprintf;
 
 final class InfoCommand extends Command
 {
@@ -102,15 +102,14 @@ final class InfoCommand extends Command
 
     private function formatSize(int $bytes): string
     {
-        $unit = 1024;
-        if ($bytes <= $unit) {
-            return $bytes . ' b';
+        $units = ['B', 'KiB', 'MiB', 'GiB', 'TiB'];
+        $size  = $bytes;
+        $unit  = 0;
+        while (Math\round($size, 1) >= 1024 && $unit < Iter\count($units) - 1) {
+            $size /= 1024;
+            $unit++;
         }
 
-        $exp = (int) (log($bytes) / log($unit));
-        $pre = 'kMGTPE';
-        $pre = $pre[$exp - 1];
-
-        return sprintf('%.1f %sB', $bytes / pow($unit, $exp), $pre);
+        return $unit === 0 ? $bytes . ' B' : Str\format('%.1f %s', $size, $units[$unit]);
     }
 }
