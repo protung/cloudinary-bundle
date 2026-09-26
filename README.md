@@ -78,16 +78,19 @@ final readonly class AvatarStorage
 ### Twig
 
 With TwigBundle enabled, the bundle adds Twig functions, also available as filters, for the URL of an image and for
-image, picture and video tags. The options of `cloudinary_url` are
-[transformation parameters](https://cloudinary.com/documentation/transformation_reference):
+image, picture and video tags. Their options are
+[transformation parameters](https://cloudinary.com/documentation/transformation_reference). The tags take HTML
+attributes as a third argument; for the picture tag they go on its `<img>`:
 
 ```twig
-{{ cloudinary_url('sample') }}
-{{ 'sample'|cloudinary_url({'width': 100, 'height': 100, 'crop': 'fill'}) }}
+{{ cloudinary_url('sample', {'width': 100, 'height': 100, 'crop': 'fill'}) }}
+{# https://res.cloudinary.com/my-cloud/image/upload/c_fill,h_100,w_100/sample #}
 
-{{ cloudinary_image_tag('sample') }}
-{{ cloudinary_picture_tag('sample') }}
-{{ cloudinary_video_tag('dog') }}
+{{ 'sample'|cloudinary_image_tag({'width': 100, 'crop': 'scale'}, {'alt': 'A sample', 'loading': 'lazy'}) }}
+{# <img alt="A sample" loading="lazy" src="https://res.cloudinary.com/my-cloud/image/upload/c_scale,w_100/sample"> #}
+
+{{ cloudinary_picture_tag('sample', {'width': 100, 'crop': 'scale'}, {'alt': 'A sample'}) }}
+{{ cloudinary_video_tag('dog', {'width': 300, 'crop': 'scale'}, {'controls': true}) }}
 ```
 
 ### Console commands
