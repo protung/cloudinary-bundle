@@ -1,13 +1,2 @@
 variant = "loose"
-
-[[issues]]
-file = "src/Factory/CloudinaryFactory.php"
-code = "no-isset"
-message = "Use of the `isset` construct."
-count = 1
-
-[[issues]]
-file = "src/Factory/CloudinaryFactory.php"
-code = "psl-array-functions"
-message = "Use the Psl array function instead of the PHP counterpart."
-count = 5
+issues = []

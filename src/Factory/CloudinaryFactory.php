@@ -7,7 +7,6 @@ namespace Speicher210\CloudinaryBundle\Factory;
 use Cloudinary\Configuration\Configuration;
 use Speicher210\CloudinaryBundle\Cloudinary\Cloudinary;
 
-use function array_key_exists;
 use function parse_url;
 
 final readonly class CloudinaryFactory
@@ -19,36 +18,34 @@ final readonly class CloudinaryFactory
      */
     public function __construct(array $config)
     {
-        if (array_key_exists('url', $config)) {
-            $url = parse_url($config['url']);
+        $cloudName = $config['cloud_name'] ?? null;
+        $apiKey    = $config['access_identifier']['api_key'] ?? null;
+        $apiSecret = $config['access_identifier']['api_secret'] ?? null;
 
-            if ($url === false || ! array_key_exists('scheme', $url)) {
+        // Any value in the URL takes precedence over the one set explicitly.
+        $url = $config['url'] ?? null;
+        if ($url !== null) {
+            $urlParts = parse_url($url);
+
+            if ($urlParts === false || ($urlParts['scheme'] ?? null) === null) {
                 throw new InvalidCloudinaryUrlException();
             }
 
-            if (array_key_exists('host', $url)) {
-                $config['cloud_name'] = $url['host'];
-            }
-
-            if (array_key_exists('user', $url)) {
-                $config['access_identifier']['api_key'] = $url['user'];
-            }
-
-            if (array_key_exists('pass', $url)) {
-                $config['access_identifier']['api_secret'] = $url['pass'];
-            }
+            $cloudName = $urlParts['host'] ?? $cloudName;
+            $apiKey    = $urlParts['user'] ?? $apiKey;
+            $apiSecret = $urlParts['pass'] ?? $apiSecret;
         }
 
-        if (! isset($config['cloud_name'], $config['access_identifier']['api_key'], $config['access_identifier']['api_secret'])) {
+        if ($cloudName === null || $apiKey === null || $apiSecret === null) {
             throw new InvalidCloudinaryUrlException();
         }
 
         $this->configuration = Configuration::fromParams(
             [
                 'cloud' => [
-                    'cloud_name' => $config['cloud_name'],
-                    'api_key' => $config['access_identifier']['api_key'],
-                    'api_secret' => $config['access_identifier']['api_secret'],
+                    'cloud_name' => $cloudName,
+                    'api_key' => $apiKey,
+                    'api_secret' => $apiSecret,
                 ],
                 'url' => [
                     'secure' => $config['secure'] ?? true,

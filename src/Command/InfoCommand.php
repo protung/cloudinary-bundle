@@ -9,6 +9,7 @@ use Override;
 use Psl\Iter;
 use Psl\Math;
 use Psl\Str;
+use Psl\Type;
 use Speicher210\CloudinaryBundle\Cloudinary\Admin;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\TableCell;
@@ -44,7 +45,7 @@ final class InfoCommand extends Command
     {
         $symfonyStyle = new SymfonyStyle($input, $output);
 
-        $response = $this->cloudinary->asset($input->getArgument('public_id'));
+        $response = $this->cloudinary->asset(Type\non_empty_string()->coerce($input->getArgument('public_id')));
 
         $this->renderProperties($symfonyStyle, $response);
 
@@ -70,14 +71,29 @@ final class InfoCommand extends Command
         }
 
         $symfonyStyle->newLine();
-        $this->renderDerivedResources($symfonyStyle, $response['derived']);
+        $this->renderDerivedResources($symfonyStyle, $response);
     }
 
-    /**
-     * @param array<array{id: string, format: string, bytes: int, transformation: string, url: string}> $derivedResources
-     */
-    private function renderDerivedResources(SymfonyStyle $symfonyStyle, array $derivedResources): void
+    private function renderDerivedResources(SymfonyStyle $symfonyStyle, ApiResponse $response): void
     {
+        $derivedResources = Type\shape(
+            [
+                'derived' => Type\vec(
+                    Type\shape(
+                        [
+                            'id' => Type\string(),
+                            'format' => Type\string(),
+                            'bytes' => Type\int(),
+                            'transformation' => Type\string(),
+                            'url' => Type\string(),
+                        ],
+                        true,
+                    ),
+                ),
+            ],
+            true,
+        )->coerce($response->getArrayCopy())['derived'];
+
         $table = $symfonyStyle->createTable();
         $table->setHeaders(
             [
