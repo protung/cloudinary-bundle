@@ -70,7 +70,7 @@ count = 1
 file = "src/Command/UploadCommand.php"
 code = "invalid-array-index"
 message = '''Invalid index type `string('public_id')` used for array access on `Cloudinary\Api\ApiResponse`.'''
-count = 2
+count = 1
 
 [[issues]]
 file = "src/Command/UploadCommand.php"

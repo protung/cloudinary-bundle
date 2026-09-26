@@ -15,6 +15,7 @@ use Speicher210\CloudinaryBundle\Command\UploadCommand;
 use Symfony\Component\Console\Tester\CommandTester;
 
 use function mkdir;
+use function preg_quote;
 use function realpath;
 use function rmdir;
 use function sort;
@@ -109,22 +110,46 @@ final class UploadCommandTest extends TestCase
         self::assertStringContainsString('uploads/photo', $commandTester->getDisplay());
     }
 
-    public function testShowsTheErrorOfAFailedUpload(): void
+    public function testUploadsWithoutAPrefix(): void
     {
         $uploader = $this->createMock(Uploader::class);
         $uploader
             ->expects($this->once())
             ->method('upload')
-            ->willThrowException(new BadRequest('Invalid image file'));
+            ->with($this->directory . '/photo.jpg', ['public_id' => 'photo'])
+            ->willReturn(new ApiResponse(['public_id' => 'photo'], []));
 
         $commandTester = new CommandTester(new UploadCommand($uploader));
-        $this->execute($commandTester, ['--prefix' => 'uploads/', '--filter' => '*.png']);
+        $this->execute($commandTester, ['--filter' => '*.jpg']);
 
         $commandTester->assertCommandIsSuccessful();
+    }
 
-        $display = $commandTester->getDisplay();
-        self::assertStringContainsString($this->directory . '/logo.png', $display);
-        self::assertStringContainsString('Invalid image file', $display);
+    public function testShowsThePublicIdAndTheErrorOfAFailedUpload(): void
+    {
+        $failingFile = $this->directory . '/logo.png';
+        $uploader    = $this->createMock(Uploader::class);
+        $uploader
+            ->expects($this->exactly(3))
+            ->method('upload')
+            ->willReturnCallback(
+                static function (mixed $file, array $options) use ($failingFile): ApiResponse {
+                    if ($file === $failingFile) {
+                        throw new BadRequest('Invalid image file');
+                    }
+
+                    return new ApiResponse(['public_id' => $options['public_id']], []);
+                },
+            );
+
+        $commandTester = new CommandTester(new UploadCommand($uploader));
+        $this->execute($commandTester, ['--prefix' => 'uploads/']);
+
+        $commandTester->assertCommandIsSuccessful();
+        self::assertMatchesRegularExpression(
+            '/' . preg_quote($failingFile, '/') . ' +uploads\/logo +Invalid image file/',
+            $commandTester->getDisplay(),
+        );
     }
 
     /**

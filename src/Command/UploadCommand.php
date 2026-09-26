@@ -59,7 +59,7 @@ final class UploadCommand extends Command
         $symfonyStyle = new SymfonyStyle($input, $output);
 
         $files  = Finder::create()->files()->in($input->getArgument('directory'));
-        $prefix = Type\string()->coerce($input->getOption('prefix'));
+        $prefix = Type\nullable(Type\string())->coerce($input->getOption('prefix')) ?? '';
         if ($input->getOption('filter') !== null) {
             $files->name($input->getOption('filter'));
         }
@@ -69,8 +69,9 @@ final class UploadCommand extends Command
         $table->render();
 
         foreach ($files as $file) {
+            $publicId = $prefix . Filesystem\get_filename($file->getFilename());
+
             try {
-                $publicId = $prefix . Filesystem\get_filename($file->getFilename());
                 $response = $this->uploadFileToCloudinary($file, $publicId);
 
                 $table->appendRow(
@@ -84,7 +85,7 @@ final class UploadCommand extends Command
                 $table->appendRow(
                     [
                         $file->getRealPath(),
-                        $response['public_id'] ?? null,
+                        $publicId,
                         $e->getMessage(),
                     ],
                 );
