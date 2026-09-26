@@ -42,7 +42,7 @@ abstract class AbstractSpeicher210CloudinaryExtensionTestCase extends TestCase
         // Need to trigger a load.
         $service = $this->container->get('speicher210_cloudinary.cloudinary');
 
-        static::assertInstanceOf(Cloudinary::class, $service);
+        self::assertInstanceOf(Cloudinary::class, $service);
 
         $this->assertDefaultConfig($service->configuration);
     }
@@ -54,7 +54,7 @@ abstract class AbstractSpeicher210CloudinaryExtensionTestCase extends TestCase
 
         $cloudinary = $this->container->get('speicher210_cloudinary.cloudinary');
 
-        static::assertInstanceOf(Cloudinary::class, $cloudinary);
+        self::assertInstanceOf(Cloudinary::class, $cloudinary);
 
         $this->assertDefaultConfig($cloudinary->configuration);
     }
@@ -66,7 +66,7 @@ abstract class AbstractSpeicher210CloudinaryExtensionTestCase extends TestCase
 
         $uploader = $this->container->get('speicher210_cloudinary.uploader');
 
-        static::assertInstanceOf(Uploader::class, $uploader);
+        self::assertInstanceOf(Uploader::class, $uploader);
 
         $this->assertDefaultConfig($uploader->configuration);
     }
@@ -78,7 +78,7 @@ abstract class AbstractSpeicher210CloudinaryExtensionTestCase extends TestCase
 
         $admin = $this->container->get('speicher210_cloudinary.admin');
 
-        static::assertInstanceOf(Admin::class, $admin);
+        self::assertInstanceOf(Admin::class, $admin);
 
         $this->assertDefaultConfig($admin->configuration);
     }
@@ -90,9 +90,9 @@ abstract class AbstractSpeicher210CloudinaryExtensionTestCase extends TestCase
 
         $service = 'twig.extension.cloudinary';
 
-        static::assertInstanceOf(CloudinaryExtension::class, $this->container->get($service));
+        self::assertInstanceOf(CloudinaryExtension::class, $this->container->get($service));
 
-        static::assertTrue($this->container->getDefinition($service)->hasTag('twig.extension'));
+        self::assertTrue($this->container->getDefinition($service)->hasTag('twig.extension'));
     }
 
     /**
@@ -100,18 +100,9 @@ abstract class AbstractSpeicher210CloudinaryExtensionTestCase extends TestCase
      */
     private function assertDefaultConfig(Configuration $configuration): void
     {
-        static::assertTrue($configuration->url->secure);
-        static::assertSame(
-            [
-                'cloud_name' => 'name',
-                'api_key' => 'key',
-                'api_secret' => 'secret',
-            ],
-            [
-                'cloud_name' => $configuration->cloud->cloudName,
-                'api_key' => $configuration->cloud->apiKey,
-                'api_secret' => $configuration->cloud->apiSecret,
-            ],
-        );
+        self::assertTrue($configuration->url->secure);
+        self::assertSame('name', $configuration->cloud->cloudName);
+        self::assertSame('key', $configuration->cloud->apiKey);
+        self::assertSame('secret', $configuration->cloud->apiSecret);
     }
 }
