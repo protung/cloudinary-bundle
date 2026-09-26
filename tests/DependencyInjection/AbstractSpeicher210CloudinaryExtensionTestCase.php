@@ -57,6 +57,7 @@ abstract class AbstractSpeicher210CloudinaryExtensionTestCase extends TestCase
         self::assertInstanceOf(Cloudinary::class, $cloudinary);
 
         $this->assertDefaultConfig($cloudinary->configuration);
+        self::assertStringNotContainsString('_a=', (string) $cloudinary->image('sample')->toUrl());
     }
 
     public function testUploaderService(): void
@@ -93,6 +94,17 @@ abstract class AbstractSpeicher210CloudinaryExtensionTestCase extends TestCase
         self::assertInstanceOf(CloudinaryExtension::class, $this->container->get($service));
 
         self::assertTrue($this->container->getDefinition($service)->hasTag('twig.extension'));
+    }
+
+    public function testAnalyticsCanBeTurnedOn(): void
+    {
+        $this->loadConfiguration($this->container, 'with_analytics');
+        $this->container->compile();
+
+        $cloudinary = $this->container->get('speicher210_cloudinary.cloudinary');
+
+        self::assertInstanceOf(Cloudinary::class, $cloudinary);
+        self::assertStringContainsString('?_a=', (string) $cloudinary->image('sample')->toUrl());
     }
 
     /**

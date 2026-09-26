@@ -43,6 +43,7 @@ speicher210_cloudinary:
         api_key: my-key
         api_secret: my-secret
     secure: true # HTTPS URLs, the default
+    analytics: false # Cloudinary's usage statistics in URLs (?_a=…), off by default
 ```
 
 ## Usage

@@ -35,6 +35,24 @@ final class CloudinaryFactoryTest extends TestCase
         self::assertFalse($configuration->url->secure);
     }
 
+    public function testUrlsLeaveOutTheAnalyticsParameterByDefault(): void
+    {
+        $cloudinary = (new CloudinaryFactory(['url' => 'cloudinary://my-key:my-secret@my-cloud']))->createCloudinary();
+
+        self::assertSame('https://res.cloudinary.com/my-cloud/image/upload/sample', (string) $cloudinary->image('sample')->toUrl());
+    }
+
+    public function testUrlsCarryTheAnalyticsParameterWhenTurnedOn(): void
+    {
+        $cloudinary = (new CloudinaryFactory(['url' => 'cloudinary://my-key:my-secret@my-cloud', 'analytics' => true]))
+            ->createCloudinary();
+
+        self::assertStringStartsWith(
+            'https://res.cloudinary.com/my-cloud/image/upload/sample?_a=',
+            (string) $cloudinary->image('sample')->toUrl(),
+        );
+    }
+
     /**
      * @param array{url?: string, cloud_name?: string} $config
      */
