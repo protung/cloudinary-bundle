@@ -6,6 +6,7 @@ namespace Speicher210\CloudinaryBundle\Command;
 
 use Cloudinary\Api\ApiResponse;
 use Override;
+use Psl\Dict;
 use Psl\Iter;
 use Psl\Math;
 use Psl\Str;
@@ -56,11 +57,13 @@ final class InfoCommand extends Command
     {
         $table = $symfonyStyle->createTable();
         $table->setHeaders(['Property', 'Value']);
-        foreach ($response as $property => $value) {
-            if (! is_scalar($value)) {
-                continue;
-            }
-
+        $properties = Dict\filter_nulls(
+            Dict\map(
+                $response->getArrayCopy(),
+                static fn (mixed $value): int|float|string|bool|null => is_scalar($value) ? $value : null,
+            ),
+        );
+        foreach ($properties as $property => $value) {
             $table->addRow([$property, $value]);
         }
 
